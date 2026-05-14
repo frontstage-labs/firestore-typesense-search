@@ -27,6 +27,8 @@ In order to backfill data that already exists in your Firestore collection to yo
 
 This will trigger the backfill background function, which will read data from your Firestore collection and create equivalent documents in your Typesense collection.
 
+**Note on large collections:** The `backfill` function is deployed with the Cloud Functions default timeout of 540 seconds (9 minutes). If you're backfilling a large collection (e.g. hundreds of thousands of documents or more) and the function times out before finishing, you can increase the timeout up to 3600 seconds (1 hour) from the Google Cloud Console by editing the `backfill` Cloud Run service and bumping the request timeout.
+
 ### See the Extension in Action
 
 Try adding or updating a Firestore document in your configured Firestore collection through the Firestore UI.

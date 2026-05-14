@@ -110,6 +110,9 @@ This extension only syncs data that was created or changed in Firestore, after i
 
 This will trigger the backfill background Cloud function, which will read data from your Firestore collection(s) and create equivalent documents in your Typesense collection.
 
+> [!NOTE]
+> The `backfill` function is deployed with the Cloud Functions default timeout of 540 seconds (9 minutes). If you're backfilling a large collection (e.g. hundreds of thousands of documents or more) and the function times out before finishing, you can increase the timeout up to 3600 seconds (1 hour) from the Google Cloud Console by editing the `backfill` Cloud Run service and bumping the request timeout.
+
 ## ☁️ Cloud Functions
 
 * **indexOnWrite:** A function that indexes data into Typesense when it's triggered by Firestore changes.
