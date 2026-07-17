@@ -1,7 +1,6 @@
 const config = require("./config.js");
 const Typesense = require("typesense");
 
-// eslint-disable-next-line require-jsdoc
 function getRandomNumber(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }

@@ -29,7 +29,7 @@ describe("indexOnWriteMultiCollection", () => {
     for (const collectionName of Object.keys(testEnvironment.config.collections)) {
       try {
         await testEnvironment.typesense.collections(encodeURIComponent(collectionName)).delete();
-      } catch (e) {
+      } catch {
         console.log(`${collectionName} not found, proceeding...`);
       }
 

@@ -1,5 +1,6 @@
 const {execSync, spawn} = require("child_process");
-const firebase = require("firebase-admin");
+const {initializeApp, deleteApp} = require("firebase-admin/app");
+const {getFirestore} = require("firebase-admin/firestore");
 const path = require("path");
 const fs = require("fs");
 
@@ -124,7 +125,7 @@ class TestEnvironment {
 
           const parsedLog = JSON.parse(flatLogMessage);
           logMessage = parsedLog.message;
-        } catch (e) {
+        } catch {
           // Not a JSON log, keep the original logMessage
         }
         this.capturedEmulatorLogs += logMessage + "\n";
@@ -151,11 +152,11 @@ class TestEnvironment {
           loadFirebaseEnvironment(this.projectRootPath);
 
           directConsole.log("Initializing Firebase Admin Client...");
-          this.firebaseApp = firebase.initializeApp({
+          this.firebaseApp = initializeApp({
             databaseURL: `${process.env.FIRESTORE_EMULATOR_HOST}?ns=${process.env.GCLOUD_PROJECT}`,
             projectId: process.env.GCLOUD_PROJECT,
           });
-          this.firestore = this.firebaseApp.firestore();
+          this.firestore = getFirestore(this.firebaseApp);
 
           directConsole.log("Test environment initialization complete");
           this.shouldLogEmulator = true;
@@ -197,7 +198,7 @@ class TestEnvironment {
       await new Promise((resolve) => this.emulator.on("exit", resolve));
     }
 
-    await this.firebaseApp.delete();
+    await deleteApp(this.firebaseApp);
   }
 
   /**
@@ -208,13 +209,13 @@ class TestEnvironment {
   async clearAllData() {
     try {
       await this.firestore.recursiveDelete(this.firestore.collection(this.config.firestoreCollectionPath));
-    } catch (e) {
+    } catch {
       directConsole.info(`${this.config.firestoreCollectionPath} collection not found, proceeding...`);
     }
 
     try {
       await this.typesense.collections(encodeURIComponent(this.config.typesenseCollectionName)).delete();
-    } catch (e) {
+    } catch {
       directConsole.info(`${this.config.typesenseCollectionName} collection not found, proceeding...`);
     }
     await this.typesense.collections().create({

@@ -48,7 +48,7 @@ describe("backfillMultiCollectionSubcollections", () => {
     for (const collectionName of Object.values(config.collections).map((c) => c.typesenseCollection)) {
       try {
         await typesense.collections(encodeURIComponent(collectionName)).delete();
-      } catch (e) {
+      } catch {
         console.info(`${collectionName} collection not found, proceeding...`);
       }
 

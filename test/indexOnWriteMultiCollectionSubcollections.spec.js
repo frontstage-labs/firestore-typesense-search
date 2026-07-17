@@ -27,7 +27,7 @@ describe("indexOnWriteMultiCollectionSubcollections", () => {
     for (const collectionName of ["user_books", "store_products"]) {
       try {
         await testEnvironment.typesense.collections(encodeURIComponent(collectionName)).delete();
-      } catch (e) {
+      } catch {
         console.info(`${collectionName} collection not found, proceeding...`);
       }
     }

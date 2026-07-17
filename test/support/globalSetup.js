@@ -1,7 +1,6 @@
 const {setup: setupDevServer} = require("jest-dev-server");
 
 module.exports = async function globalSetup() {
-  // eslint-disable-next-line no-undef
   globalThis.servers = await setupDevServer({
     command: "npm run typesenseServer",
     port: 8108,

@@ -24,7 +24,7 @@ resources:
       location: ${LOCATION}
       sourceDirectory: functions
       buildConfig:
-        runtime: nodejs22
+        runtime: nodejs24
       serviceConfig:
         timeoutSeconds: 540
       eventTrigger:
@@ -45,7 +45,7 @@ resources:
     properties:
       location: ${LOCATION}
       buildConfig:
-        runtime: nodejs22
+        runtime: nodejs24
       sourceDirectory: functions
       serviceConfig:
         timeoutSeconds: 540

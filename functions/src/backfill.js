@@ -1,16 +1,17 @@
-/* eslint-disable indent */
 const {onDocumentWritten} = require("firebase-functions/v2/firestore");
 const {error, info, debug} = require("firebase-functions/logger");
 
-const admin = require("firebase-admin");
+const {initializeApp, applicationDefault} = require("firebase-admin/app");
 const config = require("./config.js");
 const createTypesenseClient = require("./createTypesenseClient.js");
 const utils = require("./utils.js");
 const {warnIfUsingLegacyCollectionConfig} = require("./deprecation.js");
 
-admin.initializeApp({
-  credential: admin.credential.applicationDefault(),
+const app = initializeApp({
+  credential: applicationDefault(),
 });
+
+const db = config.getFirestoreInstance(app);
 
 const validateBackfillRun = (data) => {
   if (![true, "true"].includes(data.after.get("trigger"))) {
@@ -56,9 +57,9 @@ async function backfillCollection(firestorePath, collectionConfig, typesense) {
   let querySnapshot;
   if (isGroupQuery) {
     const collectionGroup = pathSegments.pop();
-    querySnapshot = admin.firestore().collectionGroup(collectionGroup);
+    querySnapshot = db.collectionGroup(collectionGroup);
   } else {
-    querySnapshot = admin.firestore().collection(firestorePath);
+    querySnapshot = db.collection(firestorePath);
   }
 
   let lastDoc = null;

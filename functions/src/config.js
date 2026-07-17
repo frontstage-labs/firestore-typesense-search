@@ -1,3 +1,19 @@
+const {getFirestore} = require("firebase-admin/firestore");
+
+/**
+ * Get a Firestore instance for the configured database.
+ * Uses the default database if DATABASE is not set or is "(default)".
+ * @param {import("firebase-admin/app").App} app - The Firebase admin app instance
+ * @return {import("firebase-admin/firestore").Firestore} Firestore instance
+ */
+function getFirestoreInstance(app) {
+  const databaseId = process.env.DATABASE;
+  if (!databaseId || databaseId === "(default)") {
+    return getFirestore(app);
+  }
+  return getFirestore(app, databaseId);
+}
+
 /**
  * Parse comma-separated string into array, handling empty values
  * @param {string} str - Comma-separated string
@@ -189,6 +205,10 @@ module.exports = {
   typesenseAPIKey: process.env.TYPESENSE_API_KEY,
   typesenseBackfillTriggerDocumentInFirestore: "typesense_sync/backfill",
   typesenseBackfillBatchSize: 1000,
+
+  // Database configuration
+  firestoreDatabase: process.env.DATABASE || "(default)",
+  getFirestoreInstance,
 
   // Helper functions
   parseCommaSeparated,
